@@ -1,103 +1,56 @@
 openapi: 3.0.0
+servers:
+  - url: https://api-cateno.sensedia.com/hlg/prepay-holder
+    description: Sandbox server (uses test data)
 info:
-  title: holder-management-api
-  description: API de Gerenciamento Backoffice
+  description: API de Gerenciamento de Portadores Pré-Pago Cateno
+  version: 1.0.0
+  title: API de Gerenciamento de Portadores 
   contact:
     email: developer@cateno.com.br
   license:
     name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
-servers:
-- url: https://api-cateno.sensedia.com/hlg/prepay-holder
-  description: Sandbox server (uses test data)
-security:
-- client_id: []
-  access_token: []
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-- name: Portador PF
-- name: Portador PJ
-- name: Conta
-- name: Cartão
-- name: Transacionais
+  - name: Portador PF
+    description: ""
+  - name: Portador PJ
+    description: ""
+  - name: Conta
+    description: ""
+  - name: Cartão
+    description: ""
+  - name: Transacionais
+    description: ""
+security:
+  - client_id: []
+    access_token: []
+    
 paths:
   /v1/intermediaries/{intermediary_id}/customers:
-    get:
-      tags:
-      - Portador PF
-      description: |
-        Listagem de Portadores PF por ID de Intermediario
-      operationId: v1IntermediariesIntermediary_idCustomersGET
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: Retorna uma Lista de Entidades de Portadores PF.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PagingResultsCustomerSchema'
-        "400":
-          description: Erro na Requisição
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "401":
-          description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "403":
-          description: Acesso Negado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "404":
-          description: Conta não encontrada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "500":
-          description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPF
+    parameters:
+    - name: intermediary_id
+      in: path
+      description: ID do Intermediário
+      required: true
+      schema:
+        type: integer
+        format: int64
     post:
       tags:
       - Portador PF
       description: |
         Criação um Portador PF
-      operationId: v1IntermediariesIntermediary_idCustomersPOST
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       requestBody:
-        description: |
+        description: | 
           Descrição dos campos de envio para criação de Portador PF
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomerSchema'
-        required: true
       responses:
-        "201":
+        '201':
           description: Retorna a Entidade de Customer criada.
           content:
             application/json:
@@ -110,7 +63,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -129,43 +82,75 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPF
-  /v1/intermediaries/{intermediary_id}/customers/{customer_id}:
-    patch:
+    get:
       tags:
       - Portador PF
       description: |
+        Listagem de Portadores PF por ID de Intermediario
+      responses:
+        '200':
+          description: Retorna uma Lista de Entidades de Portadores PF.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagingResultsCustomerSchema'
+        "400":
+          description: Erro na Requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "401":
+          description: Não autorizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "403":
+          description: Acesso Negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "404":
+          description: Conta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "500":
+          description: Erro interno de servidor
+  /v1/intermediaries/{intermediary_id}/customers/{customer_id}:
+    parameters:
+    - name: intermediary_id
+      in: path
+      description: ID do Intermediário
+      required: true
+      schema:
+        type: integer
+        format: int64
+    - name: customer_id
+      in: path
+      description: ID do Portador PF
+      required: true
+      schema:
+        type: integer
+        format: int64
+    patch:
+      tags:
+        - Portador PF            
+      description: |
         Atualizar um Portador PF
-      operationId: v1IntermediariesIntermediary_idCustomersCustomer_idPATCH
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      - name: customer_id
-        in: path
-        description: ID do Portador PF
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       requestBody:
-        description: |
+        description: | 
           Descrição dos campos de envio para atualizar Portador PF
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CustomerUpdateSchema'
-        required: true
       responses:
-        "204":
+        '204':
           description: O Portador foi alterado com sucesso
         "400":
           description: Erro na Requisição
@@ -191,18 +176,16 @@ paths:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HolderRegistryCustomerHolderPost.Arn}/invocations
         responses: {}
-        httpMethod: POST
-        type: aws_proxy
-      x-swagger-router-controller: PortadorPF
+        httpMethod: "POST"
+        type: "aws_proxy"
   /v1/customers:
     get:
       tags:
       - Portador PF
       description: |
         Listagem de Portadores PF
-      operationId: v1CustomersGET
       responses:
-        "200":
+        '200':
           description: Retorna uma Lista de Entidades de Portadores PF.
           content:
             application/json:
@@ -215,7 +198,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -234,26 +217,22 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPF
   /v1/customers/{customer_id}:
+    parameters:
+    - name: customer_id
+      in: path
+      description: ID do Portador PF
+      required: true
+      schema:
+        type: integer
+        format: int64
     get:
       tags:
       - Portador PF
       description: |
         Detalhamento do Portador PF
-      operationId: v1CustomersCustomer_idGET
-      parameters:
-      - name: customer_id
-        in: path
-        description: ID do Portador PF
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       responses:
-        "200":
+        '200':
           description: Retorna o detalhe Portador PF.
           content:
             application/json:
@@ -266,7 +245,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -285,84 +264,31 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPF
+
   /v1/intermediaries/{intermediary_id}/companies:
-    get:
-      tags:
-      - Portador PJ
-      description: |
-        Criação um Portador PJ
-      operationId: v1IntermediariesIntermediary_idCompaniesGET
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      responses:
-        "200":
-          description: Retorna uma Lista de Entidades de Portadores PJ.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PagingResultsCompanySchema'
-        "400":
-          description: Erro na Requisição
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "401":
-          description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "403":
-          description: Acesso Negado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "404":
-          description: Conta não encontrada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "500":
-          description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPJ
+    parameters:
+    - name: intermediary_id
+      in: path
+      description: ID do Intermediário
+      required: true
+      schema:
+        type: integer
+        format: int64
     post:
       tags:
       - Portador PJ
       description: |
         Criação um Portador PJ
-      operationId: v1IntermediariesIntermediary_idCompaniesPOST
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       requestBody:
-        description: |
+        description: | 
           Descrição dos campos de envio para criação de Portador PJ
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CompanySchema'
-        required: true
       responses:
-        "201":
+        '201':
           description: Retorna a Entidade de Customer criada.
           content:
             application/json:
@@ -375,7 +301,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -394,80 +320,13 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPJ
-  /v1/intermediaries/{intermediary_id}/companies/{company_id}:
-    patch:
-      tags:
-      - Portador PJ
-      description: |
-        Atualizar um Portador PJ
-      operationId: v1IntermediariesIntermediary_idCompaniesCompany_idPATCH
-      parameters:
-      - name: intermediary_id
-        in: path
-        description: ID do Intermediário
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      - name: company_id
-        in: path
-        description: ID do Portador PJ
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      requestBody:
-        description: |
-          Descrição dos campos de envio para atualizar Portador PJ
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CompanyUpdateSchema'
-        required: true
-      responses:
-        "204":
-          description: O Portador foi alterado com sucesso
-        "400":
-          description: Erro na Requisição
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "401":
-          description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "403":
-          description: Acesso Negado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "404":
-          description: Conta não encontrada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "500":
-          description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPJ
-  /v1/companies:
     get:
       tags:
       - Portador PJ
       description: |
         Criação um Portador PJ
-      operationId: v1CompaniesGET
       responses:
-        "200":
+        '200':
           description: Retorna uma Lista de Entidades de Portadores PJ.
           content:
             application/json:
@@ -480,7 +339,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -499,26 +358,119 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPJ
+  /v1/intermediaries/{intermediary_id}/companies/{company_id}:
+    parameters:
+    - name: intermediary_id
+      in: path
+      description: ID do Intermediário
+      required: true
+      schema:
+        type: integer
+        format: int64
+    - name: company_id
+      in: path
+      description: ID do Portador PJ
+      required: true
+      schema:
+        type: integer
+        format: int64
+    patch:
+      tags:
+        - Portador PJ          
+      description: |
+        Atualizar um Portador PJ
+      requestBody:
+        description: | 
+          Descrição dos campos de envio para atualizar Portador PJ
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpdateSchema'
+      responses:
+        '204':
+          description: O Portador foi alterado com sucesso
+        "400":
+          description: Erro na Requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "401":
+          description: Não autorizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "403":
+          description: Acesso Negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "404":
+          description: Conta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "500":
+          description: Erro interno de servidor
+  /v1/companies:
+    get:
+      tags:
+      - Portador PJ
+      description: |
+        Criação um Portador PJ
+      responses:
+        '200':
+          description: Retorna uma Lista de Entidades de Portadores PJ.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagingResultsCompanySchema'
+        "400":
+          description: Erro na Requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "401":
+          description: Não autorizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "403":
+          description: Acesso Negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "404":
+          description: Conta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "500":
+          description: Erro interno de servidor
   /v1/companies/{company_id}:
+    parameters:
+    - name: company_id
+      in: path
+      description: ID do Portador PJ
+      required: true
+      schema:
+        type: integer
+        format: int64
     get:
       tags:
       - Portador PJ
       description: |
         Detalhamento do Portador PJ
-      operationId: v1CompaniesCompany_idGET
-      parameters:
-      - name: company_id
-        in: path
-        description: ID do Portador PJ
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       responses:
-        "200":
+        '200':
           description: Retorna o detalhe Portador PF.
           content:
             application/json:
@@ -531,7 +483,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -550,146 +502,36 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: PortadorPJ
-  /v1/accounts:
-    get:
-      tags:
-      - Conta
-      description: |
-        Detalhe da Conta do Portador
-      operationId: v1AccountsGET
-      responses:
-        "200":
-          description: Detalha a conta do Portador
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccountSchema'
-        "400":
-          description: Erro na Requisição
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "401":
-          description: Não autorizado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "403":
-          description: Acesso Negado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "404":
-          description: Conta não encontrada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "500":
-          description: Erro interno de servidor
-      x-swagger-router-controller: Conta
+
   /v1/holders/{holder_id}/accounts:
-    get:
-      tags:
-      - Conta
-      description: |
-        Listagem de Contas do Portador
-      operationId: v1HoldersHolder_idAccountsGET
-      parameters:
-      - name: holder_id
-        in: path
-        description: ID do Portador
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
-      - name: page
-        in: query
-        description: Página
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-      - name: size
-        in: query
-        description: Quantidade de registros na página
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-      responses:
-        "200":
-          description: Retorna uma Lista de Cartões
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PagingResultsAccountSchema'
-        "400":
-          description: Erro na Requisição
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "403":
-          description: Acesso Negado
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "404":
-          description: Conta não encontrada
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/4xxErrorSchema'
-        "500":
-          description: Erro interno de servidor
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HolderAccountAccountListByHolderId.Arn}/invocations
-        responses: {}
-        httpMethod: POST
-        type: aws_proxy
-      x-swagger-router-controller: Conta
+    parameters:
+    - name: holder_id
+      in: path
+      description: ID do Portador
+      required: true
+      schema:
+        type: integer
+        format: int64
     post:
       tags:
-      - Conta
+        - Conta
       description: |
         Criação de Conta do Portador
-      operationId: v1HoldersHolder_idAccountsPOST
-      parameters:
-      - name: holder_id
-        in: path
-        description: ID do Portador
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       requestBody:
-        description: |
+        description: | 
           Descrição dos campos de envio para criação de Conta do Portador
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AccountRequestSchema'
-        required: true
       responses:
         "201":
           description: Retorna a entidade Criada
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccountSchema'
+                $ref: "#/components/schemas/AccountSchema"
         "400":
           description: Erro na Requisição
           content:
@@ -697,7 +539,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -716,29 +558,22 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: Conta
-  /v1/cards:
     get:
       tags:
-      - Cartão
+        - Conta
       description: |
-        Lista de cartões
-      operationId: v1CardsGET
+        Listagem de Contas do Portador
       parameters:
       - name: page
         in: query
         description: Página
         required: false
-        style: form
-        explode: true
         schema:
           type: integer
       - name: size
         in: query
         description: Quantidade de registros na página
         required: false
-        style: form
-        explode: true
         schema:
           type: integer
       responses:
@@ -747,7 +582,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagingResultsCardSchema'
+                $ref: "#/components/schemas/PagingResultsAccountSchema"
         "400":
           description: Erro na Requisição
           content:
@@ -755,7 +590,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -774,31 +609,28 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: Carto
-  /v1/accounts/{account_id}/cards:
+
+  /v1/accounts/{account_id}:
+    parameters:
+    - name: account_id
+      in: path
+      description: ID da Conta
+      required: true
+      schema:
+        type: integer
+        format: int64
     get:
       tags:
-      - Cartão
+        - Conta
       description: |
-        Lista de cartões por ID da conta
-      operationId: v1AccountsAccount_idCardsGET
-      parameters:
-      - name: account_id
-        in: path
-        description: ID do Portador
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
+        Detalhamento da Conta do Portador
       responses:
         "200":
-          description: Retorna uma Lista de Cartões
+          description: Retorna o detalhe da conta
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagingResultsCardSchema'
+                $ref: "#/components/schemas/AccountSchema"
         "400":
           description: Erro na Requisição
           content:
@@ -806,7 +638,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -825,38 +657,35 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: Carto
+  /v1/accounts/{account_id}/cards:
+    parameters:
+    - name: account_id
+      in: path
+      description: ID do Portador
+      required: true
+      schema:
+        type: integer
+        format: int64
     post:
       tags:
-      - Cartão
+        - Cartão
       description: |
         Criação de Conta do Portador
-      operationId: v1AccountsAccount_idCardsPOST
-      parameters:
-      - name: account_id
-        in: path
-        description: ID do Portador
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int64
       requestBody:
-        description: |
+        description: | 
           Descrição dos campos de envio para criação de Conta do Portador
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CardRequestSchema'
-        required: true
       responses:
         "201":
           description: Retorna a entidade Criada
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CardSchema'
+                $ref: "#/components/schemas/CardSchema"
         "400":
           description: Erro na Requisição
           content:
@@ -864,7 +693,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "401":
-          description: Não autorizado
+          description: Não autorizado 
           content:
             application/json:
               schema:
@@ -883,20 +712,67 @@ paths:
                 $ref: '#/components/schemas/4xxErrorSchema'
         "500":
           description: Erro interno de servidor
-      x-swagger-router-controller: Carto
+    get:
+      tags:
+        - Cartão
+      description: |
+        Lista de cartões por ID da conta
+      responses:
+        "200":
+          description: Retorna uma Lista de Cartões
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PagingResultsCardSchema"
+        "400":
+          description: Erro na Requisição
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "401":
+          description: Não autorizado 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "403":
+          description: Acesso Negado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "404":
+          description: Conta não encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/4xxErrorSchema'
+        "500":
+          description: Erro interno de servidor
 components:
+  securitySchemes:
+    client_id:
+      type: apiKey
+      name: CLIENT_ID
+      in: header
+    access_token:
+      type: apiKey
+      name: ACCESS_TOKEN
+      in: header
   schemas:
-    "4xxErrorSchema":
+# Schemas Globais para criação de outros schemas
+    4xxErrorSchema:
       type: object
       properties:
         message:
-          type: string
+          type: string 
         error_code:
           type: integer
     AuditEmbeddable:
       type: object
       properties:
-        active:
+        active: 
           type: boolean
           readOnly: true
         created_at:
@@ -908,6 +784,8 @@ components:
           format: date-time
           readOnly: true
     DomainEmbeddable:
+      allOf:
+        - $ref: '#/components/schemas/AuditEmbeddable'
       properties:
         id:
           type: integer
@@ -919,9 +797,9 @@ components:
           readOnly: true
         name:
           type: string
-      allOf:
-      - $ref: '#/components/schemas/AuditEmbeddable'
     DomainWithAuditEmbeddable:
+      allOf:
+        - $ref: '#/components/schemas/AuditEmbeddable'
       properties:
         id:
           type: integer
@@ -931,17 +809,14 @@ components:
           type: integer
           format: int64
           readOnly: true
-      allOf:
-      - $ref: '#/components/schemas/AuditEmbeddable'
     DomainIdEmbeddable:
       properties:
         id:
           type: integer
           format: int64
-      example:
-        id: 0
     PagingResults:
-      type: object
+      type: 
+        object
       properties:
         page:
           type: integer
@@ -955,27 +830,30 @@ components:
         count:
           type: integer
           format: int64
+# Schemas Globais
     AddressTypeSchema:
       allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
+        - $ref: '#/components/schemas/DomainEmbeddable'
     PhoneTypeSchema:
       allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
+        - $ref: '#/components/schemas/DomainEmbeddable'
     AddressSchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainEmbeddable'
+      type: object
       required:
       - address_type
-      - correspondence
-      - country
-      - state
-      - street
       - zip_code
-      type: object
+      - street
+      - state
+      - country
+      - correspondence
       properties:
         address_type:
           $ref: '#/components/schemas/AddressTypeSchema'
         zip_code:
-          pattern: /^[0-9]*$/
           type: string
+          pattern: /^[0-9]*$/
         street:
           type: string
         number:
@@ -989,31 +867,20 @@ components:
         city:
           type: string
         state:
-          maxLength: 2
           type: string
+          maxLength: 2
         country:
           type: string
         correspondence:
           type: boolean
-      example:
-        reference: reference
-        number: 0
-        country: country
-        address_type: ""
-        city: city
-        street: street
-        correspondence: true
-        locality: locality
-        state: state
-        complement: complement
-        zip_code: zip_code
-      allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
     PhoneSchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainEmbeddable'
+        - type: object
       required:
-      - ddd
-      - phone
-      - phone_type
+        - ddd
+        - phone
+        - phone_type
       properties:
         ddd:
           type: string
@@ -1024,146 +891,102 @@ components:
           nullable: true
         phone_type:
           $ref: '#/components/schemas/PhoneTypeSchema'
-      example:
-        phone_type: ""
-        ddd: ddd
-        phone: phone
-        extension_line: extension_line
-      allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
-      - type: object
     ModalitySchema:
       allOf:
-      - $ref: '#/components/schemas/DomainIdEmbeddable'
+        - $ref: '#/components/schemas/DomainIdEmbeddable'
     CareerSchema:
       allOf:
-      - $ref: '#/components/schemas/DomainIdEmbeddable'
+        - $ref: '#/components/schemas/DomainIdEmbeddable'
     CareerTypeSchema:
       allOf:
-      - $ref: '#/components/schemas/DomainIdEmbeddable'
+        - $ref: '#/components/schemas/DomainIdEmbeddable'
     MaritalStatusSchema:
       allOf:
-      - $ref: '#/components/schemas/DomainIdEmbeddable'
+        - $ref: '#/components/schemas/DomainIdEmbeddable'
     NationalitySchema:
       allOf:
-      - $ref: '#/components/schemas/DomainIdEmbeddable'
+        - $ref: '#/components/schemas/DomainIdEmbeddable'
+
+# Schemas de Portador
     HolderSchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainEmbeddable'
       required:
-      - addresses
-      - email
-      - modality
-      - phones
+        - email
+        - modality
+        - addresses
+        - phones
       properties:
         email:
           type: string
           format: email
         modalities:
-          uniqueItems: true
-          type: array
           readOnly: true
+          type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/ModalitySchema'
         modality:
           $ref: '#/components/schemas/ModalitySchema'
+          writeOnly: true
         addresses:
-          uniqueItems: true
           type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/AddressSchema'
         phones:
-          uniqueItems: true
           type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/PhoneSchema'
-      allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
     PagingResultsCustomerSchema:
+      allOf: 
+        - $ref: '#/components/schemas/PagingResults'
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/CustomerSchema'
-      example:
-        results:
-        - marital_status: ""
-          career: ""
-          nationality: ""
-          birth_date: 2000-01-23
-          mother_name: mother_name
-          genre: genre
-          identity_shipping_date: 2000-01-23
-          identity_number: identity_number
-          identity_state: identity_state
-          identity_agent: identity_agent
-          tax_id: tax_id
-          career_type: ""
-        - marital_status: ""
-          career: ""
-          nationality: ""
-          birth_date: 2000-01-23
-          mother_name: mother_name
-          genre: genre
-          identity_shipping_date: 2000-01-23
-          identity_number: identity_number
-          identity_state: identity_state
-          identity_agent: identity_agent
-          tax_id: tax_id
-          career_type: ""
-      allOf:
-      - $ref: '#/components/schemas/PagingResults'
     CustomerSchema:
+      allOf:
+        - $ref: '#/components/schemas/HolderSchema'
+        - type: object
       required:
-      - tax_id
+        - tax_id
       properties:
         tax_id:
-          pattern: ^[0-9]*$
           type: string
+          pattern: '^[0-9]*$'
         birth_date:
           type: string
           format: date
         mother_name:
           type: string
-        genre:
+        genre: 
           type: string
-        identity_number:
-          pattern: ^[0-9]*$
+        identity_number: 
           type: string
-        identity_agent:
+          pattern: '^[0-9]*$'
+        identity_agent:  
           type: string
-        identity_state:
+        identity_state:  
           type: string
-        identity_shipping_date:
+        identity_shipping_date:  
           type: string
           format: date
-        marital_status:
+        marital_status: 
           $ref: '#/components/schemas/MaritalStatusSchema'
-        nationality:
+        nationality: 
           $ref: '#/components/schemas/NationalitySchema'
-        career:
+        career: 
           $ref: '#/components/schemas/CareerSchema'
         career_type:
           $ref: '#/components/schemas/CareerTypeSchema'
-      example:
-        marital_status: ""
-        career: ""
-        nationality: ""
-        birth_date: 2000-01-23
-        mother_name: mother_name
-        genre: genre
-        identity_shipping_date: 2000-01-23
-        identity_number: identity_number
-        identity_state: identity_state
-        identity_agent: identity_agent
-        tax_id: tax_id
-        career_type: ""
-      allOf:
-      - $ref: '#/components/schemas/HolderSchema'
-      - type: object
     CustomerUpdateSchema:
       properties:
         tax_id:
-          pattern: ^[0-9]*$
           type: string
+          pattern: '^[0-9]*$'
         birth_date:
           type: string
           format: date
@@ -1172,225 +995,95 @@ components:
           format: email
         mother_name:
           type: string
-        genre:
+        genre: 
           type: string
-        identity_number:
-          pattern: ^[0-9]*$
+        identity_number: 
           type: string
-        identity_agent:
+          pattern: '^[0-9]*$'
+        identity_agent:  
           type: string
-        identity_state:
+        identity_state:  
           type: string
-        identity_shipping_date:
+        identity_shipping_date:  
           type: string
           format: date
-        marital_status:
+        marital_status: 
           $ref: '#/components/schemas/MaritalStatusSchema'
-        career:
+        career: 
           $ref: '#/components/schemas/CareerSchema'
         career_type:
           $ref: '#/components/schemas/CareerTypeSchema'
-        nationality:
+        nationality: 
           $ref: '#/components/schemas/NationalitySchema'
     PagingResultsCompanySchema:
+      allOf: 
+        - $ref: '#/components/schemas/PagingResults'
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/CompanySchema'
-      example:
-        results:
-        - state_registration: state_registration
-          addresses:
-          - reference: reference
-            number: 0
-            country: country
-            address_type: ""
-            city: city
-            street: street
-            correspondence: true
-            locality: locality
-            state: state
-            complement: complement
-            zip_code: zip_code
-          - reference: reference
-            number: 0
-            country: country
-            address_type: ""
-            city: city
-            street: street
-            correspondence: true
-            locality: locality
-            state: state
-            complement: complement
-            zip_code: zip_code
-          modalities:
-          - ""
-          - ""
-          fantasy_name: fantasy_name
-          company_name: company_name
-          phones:
-          - phone_type: ""
-            ddd: ddd
-            phone: phone
-            extension_line: extension_line
-          - phone_type: ""
-            ddd: ddd
-            phone: phone
-            extension_line: extension_line
-          founding_date: 2000-01-23
-          email: ""
-          tax_id: tax_id
-        - state_registration: state_registration
-          addresses:
-          - reference: reference
-            number: 0
-            country: country
-            address_type: ""
-            city: city
-            street: street
-            correspondence: true
-            locality: locality
-            state: state
-            complement: complement
-            zip_code: zip_code
-          - reference: reference
-            number: 0
-            country: country
-            address_type: ""
-            city: city
-            street: street
-            correspondence: true
-            locality: locality
-            state: state
-            complement: complement
-            zip_code: zip_code
-          modalities:
-          - ""
-          - ""
-          fantasy_name: fantasy_name
-          company_name: company_name
-          phones:
-          - phone_type: ""
-            ddd: ddd
-            phone: phone
-            extension_line: extension_line
-          - phone_type: ""
-            ddd: ddd
-            phone: phone
-            extension_line: extension_line
-          founding_date: 2000-01-23
-          email: ""
-          tax_id: tax_id
-      allOf:
-      - $ref: '#/components/schemas/PagingResults'
     CompanySchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainEmbeddable'
+        - type: object
       properties:
         email:
           type: string
           format: email
         modalities:
-          uniqueItems: true
-          type: array
           readOnly: true
+          type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/ModalitySchema'
         modality:
           $ref: '#/components/schemas/ModalitySchema'
+          writeOnly: true
         addresses:
-          uniqueItems: true
           type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/AddressSchema'
         phones:
-          uniqueItems: true
           type: array
+          uniqueItems: true
           items:
             $ref: '#/components/schemas/PhoneSchema'
         tax_id:
-          pattern: ^[0-9]*$
           type: string
+          pattern: '^[0-9]*$'
         company_name:
           type: string
         fantasy_name:
           type: string
-        founding_date:
+        founding_date: 
           type: string
           format: date
-        state_registration:
+        state_registration:  
           type: string
-      example:
-        state_registration: state_registration
-        addresses:
-        - reference: reference
-          number: 0
-          country: country
-          address_type: ""
-          city: city
-          street: street
-          correspondence: true
-          locality: locality
-          state: state
-          complement: complement
-          zip_code: zip_code
-        - reference: reference
-          number: 0
-          country: country
-          address_type: ""
-          city: city
-          street: street
-          correspondence: true
-          locality: locality
-          state: state
-          complement: complement
-          zip_code: zip_code
-        modalities:
-        - ""
-        - ""
-        fantasy_name: fantasy_name
-        company_name: company_name
-        phones:
-        - phone_type: ""
-          ddd: ddd
-          phone: phone
-          extension_line: extension_line
-        - phone_type: ""
-          ddd: ddd
-          phone: phone
-          extension_line: extension_line
-        founding_date: 2000-01-23
-        email: ""
-        tax_id: tax_id
-      allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
-      - type: object
     CompanyUpdateSchema:
-      required:
-      - company_name
-      - email
       type: object
+      required:
+        - company_name
+        - email
       properties:
         company_name:
           type: string
         email:
           type: string
+# Schemas de Conta
     PagingResultsAccountSchema:
+      allOf: 
+        - $ref: '#/components/schemas/PagingResults'
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/AccountSchema'
-      example:
-        results:
-        - global_balance: 6.0274563
-          holder:
-            id: 0
-        - global_balance: 6.0274563
-          holder:
-            id: 0
-      allOf:
-      - $ref: '#/components/schemas/PagingResults'
     AccountSchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainWithAuditEmbeddable'
       properties:
         holder:
           $ref: '#/components/schemas/DomainIdEmbeddable'
@@ -1401,12 +1094,6 @@ components:
         global_balance:
           type: number
           format: float
-      example:
-        global_balance: 6.0274563
-        holder:
-          id: 0
-      allOf:
-      - $ref: '#/components/schemas/DomainWithAuditEmbeddable'
     AccountRequestSchema:
       type: object
       properties:
@@ -1415,27 +1102,20 @@ components:
           format: int64
         modality:
           $ref: '#/components/schemas/DomainIdEmbeddable'
+# Schemas de Cartao
     PagingResultsCardSchema:
+      allOf: 
+        - $ref: '#/components/schemas/PagingResults'
       properties:
         results:
           type: array
           items:
             $ref: '#/components/schemas/CardSchema'
-      example:
-        results:
-        - encrypted_number: encrypted_number
-          is_virtual_card: true
-          account:
-            id: 0
-        - encrypted_number: encrypted_number
-          is_virtual_card: true
-          account:
-            id: 0
-      allOf:
-      - $ref: '#/components/schemas/PagingResults'
     CardSchema:
+      allOf:
+        - $ref: '#/components/schemas/DomainEmbeddable'
       required:
-      - tax_id
+        - tax_id
       properties:
         account:
           $ref: '#/components/schemas/DomainIdEmbeddable'
@@ -1447,28 +1127,12 @@ components:
           type: string
         is_virtual_card:
           type: boolean
-      example:
-        encrypted_number: encrypted_number
-        is_virtual_card: true
-        account:
-          id: 0
-      allOf:
-      - $ref: '#/components/schemas/DomainEmbeddable'
     CardRequestSchema:
-      required:
-      - card_configuration
       type: object
+      required:
+        - card_configuration
       properties:
         is_virtual:
           type: boolean
         card_configuration:
           $ref: '#/components/schemas/DomainIdEmbeddable'
-  securitySchemes:
-    client_id:
-      type: apiKey
-      name: CLIENT_ID
-      in: header
-    access_token:
-      type: apiKey
-      name: ACCESS_TOKEN
-      in: header
